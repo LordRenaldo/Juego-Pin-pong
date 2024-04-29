@@ -12,63 +12,45 @@ public class MovimientoRaqueta : MonoBehaviour
     public float VelocidadMovimiento;
     public float VelocidadMovimientoLenta;
     bool raquetaCongelada = false;
+    private Rigidbody2D rbRaqueta;
+
+    private void Awake ()
+    {
+        rbRaqueta = this.gameObject.GetComponent<Rigidbody2D> ();
+    }
 
     private void FixedUpdate ()
     {
-        float movimientoHorizontal;
-        if (raquetaCongelada == true)
-        {
-            movimientoHorizontal = Input.GetAxisRaw ("Horizontal");
-            GetComponent<Rigidbody2D> ().velocity = new Vector2 (movimientoHorizontal * VelocidadMovimientoLenta, 0);
-        }
-        else
-        {
-            movimientoHorizontal = Input.GetAxisRaw ("Horizontal");
-            GetComponent<Rigidbody2D> ().velocity = new Vector2 (movimientoHorizontal * VelocidadMovimiento, 0);
-        }
+        float movimientoHorizontal = Input.GetAxisRaw ("Horizontal");
+        float velocidad = raquetaCongelada ? VelocidadMovimientoLenta : VelocidadMovimiento;
+        rbRaqueta.velocity = new Vector2 (movimientoHorizontal * velocidad, 0);
     }
 
     public void PosicionarRaqueta ()
     {
-        Rigidbody2D Raqueta = this.gameObject.GetComponent<Rigidbody2D> ();
         this.gameObject.transform.localPosition = new Vector3 (0, -2.5f, 100);
     }
-    public void AumentarVelocidadPelota ()
-    {
 
+
+    public void CambiarMaterialRaqueta ( Material material )
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            Renderer linea = transform.GetChild (i).GetComponent<Renderer> ();
+            linea.material = material;
+        }
     }
+
     public void CongelarRaqueta ()
     {
-        LineaSuperior = transform.GetChild (0).GetComponent<Renderer> ();
-        LineaSuperior.material = azul;
-
-        LineaInferior = transform.GetChild (1).GetComponent<Renderer> ();
-        LineaInferior.material = azul;
-
-        LineaIzquierda = transform.GetChild (2).GetComponent<Renderer> ();
-        LineaIzquierda.material = azul;
-
-        LineaDerecha = transform.GetChild (3).GetComponent<Renderer> ();
-        LineaDerecha.material = azul;
+        CambiarMaterialRaqueta (azul);
         raquetaCongelada = true;
         Debug.Log (raquetaCongelada);
-
     }
+
     public void DescongelarRaqueta ()
     {
         raquetaCongelada = false;
-        LineaSuperior = transform.GetChild (0).GetComponent<Renderer> ();
-        LineaSuperior.material = rojo;
-
-        LineaInferior = transform.GetChild (1).GetComponent<Renderer> ();
-        LineaInferior.material = rojo;
-
-        LineaIzquierda = transform.GetChild (2).GetComponent<Renderer> ();
-        LineaIzquierda.material = rojo;
-
-        LineaDerecha = transform.GetChild (3).GetComponent<Renderer> ();
-        LineaDerecha.material = rojo;
-
+        CambiarMaterialRaqueta (rojo);
     }
-
 }

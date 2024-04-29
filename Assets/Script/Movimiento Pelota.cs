@@ -8,6 +8,12 @@ public class MovimientoPelota : MonoBehaviour
     public float velocidadExtra;
     public float velocidadMaxima;
     float contadorGolpe = 0;
+    private Rigidbody2D rbPelota;
+
+    private void Awake ()
+    {
+        rbPelota = this.gameObject.GetComponent<Rigidbody2D> ();
+    }
 
     void Start ()
     {
@@ -39,8 +45,7 @@ public class MovimientoPelota : MonoBehaviour
     {
         direccion = direccion.normalized;
         float velocidad = this.velocidadMovimiento + this.contadorGolpe * velocidadExtra;
-        Rigidbody2D pelota = this.gameObject.GetComponent<Rigidbody2D> ();
-        pelota.velocity = direccion * velocidad;
+        rbPelota.velocity = direccion * velocidad;
     }
     public void PosicionarPelota ( bool comienzaJugador )
     {

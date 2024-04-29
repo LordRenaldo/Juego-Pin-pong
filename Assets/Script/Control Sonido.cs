@@ -8,13 +8,16 @@ public class ControlSonido : MonoBehaviour
 
     private void OnCollisionEnter2D ( Collision2D collision )
     {
-        if (collision.gameObject.name == ("Raqueta"))
+        switch (collision.gameObject.name)
         {
-            this.sonidoRaqueta.Play ();
-        }
-        else if (collision.gameObject.name == ("Pared superior") || collision.gameObject.name == ("Pared izquierda") || collision.gameObject.name == ("Pared derecha"))
-        {
-            this.sonidoPared.Play ();
+            case "Raqueta":
+            sonidoRaqueta.Play ();
+            break;
+            case "Pared superior":
+            case "Pared izquierda":
+            case "Pared derecha":
+            sonidoPared.Play ();
+            break;
         }
     }
 }

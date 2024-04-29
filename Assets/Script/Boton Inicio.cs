@@ -3,21 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class BotonInicio : MonoBehaviour
 {
-    private void Start ()
-    {
+    private const KeyCode StartKey = KeyCode.Return;
 
-    }
     private void Update ()
     {
-        if (Input.GetKeyDown (KeyCode.Return))
+        if (Input.GetKeyDown (StartKey))
         {
             SceneManager.LoadScene ("Juego");
         }
     }
+
     public void CambioDeEscena ( int escenaID )
     {
         SceneManager.LoadScene (escenaID);
         Debug.Log ("boton presionado");
     }
-
 }

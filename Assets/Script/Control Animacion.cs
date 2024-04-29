@@ -6,15 +6,17 @@ public class ControlAnimacion : MonoBehaviour
     private Animator animator;
     [SerializeField] private AnimationClip final;
 
-    private void Start ()
+    private void Awake ()
     {
         animator = GetComponent<Animator> ();
     }
-    private void Update ()
-    {
 
+    public void IniciarAnimacion ()
+    {
+        StartCoroutine (CambioEscena ());
     }
-    IEnumerator CambioEscena ()
+
+    private IEnumerator CambioEscena ()
     {
         animator.SetTrigger ("Iniciar");
         yield return new WaitForSeconds (final.length);

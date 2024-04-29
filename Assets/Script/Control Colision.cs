@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class ControlColision : MonoBehaviour
 {
-
     public MovimientoRaqueta MovimientoRaqueta;
     public MovimientoPelota movimientoPelota;
     public Actualizartexto actualizartexto;
@@ -13,6 +12,13 @@ public class ControlColision : MonoBehaviour
     public bool pelotaHelada = false;
     public bool pelotaTransparente = false;
 
+    private Rigidbody2D rbPelota;
+
+    private void Awake ()
+    {
+        rbPelota = movimientoPelota.GetComponent<Rigidbody2D> ();
+    }
+
     void ReboteConRaqueta ( Collision2D colision )
     {
         Vector3 posicionPelota = this.transform.position;
@@ -20,43 +26,48 @@ public class ControlColision : MonoBehaviour
         float anchoRaqueta = colision.collider.bounds.size.x;
         float y = 1;
 
-
         float x = (posicionPelota.x - posicionRaqueta.x) / anchoRaqueta;
 
         this.movimientoPelota.MoverPelota (new Vector2 (x, y));
         this.movimientoPelota.AumentarContadorGolpe ();
     }
+
+    void Rebote ( Collision2D colision, float anguloAleatorio )
+    {
+        Vector2 direccionPelota = rbPelota.velocity.normalized;
+        Vector2 direccionSuperficie = colision.contacts [0].normal;
+        Vector2 direccionRebote = Quaternion.Euler (0, 0, anguloAleatorio) * direccionPelota;
+        rbPelota.velocity = direccionRebote * rbPelota.velocity.magnitude;
+    }
+
     void RebotePared ( Collision2D colision )
     {
         Debug.Log ("Estabilizador llamado");
-        Vector2 direccionPelota = this.movimientoPelota.GetComponent<Rigidbody2D> ().velocity.normalized;
-        Vector2 direccionSuperficie = colision.contacts [0].normal;
-        float anguloAleatorio = Random.Range (-10f, 10f);
-        Vector2 direccionRebote = Quaternion.Euler (0, 0, anguloAleatorio) * direccionPelota;
-        this.movimientoPelota.GetComponent<Rigidbody2D> ().velocity = direccionRebote * this.movimientoPelota.GetComponent<Rigidbody2D> ().velocity.magnitude;
-
+        Rebote (colision, Random.Range (-10f, 10f));
     }
+
     void EstabiliadorAleatorioDeRebote ( Collision2D colision )
     {
         Debug.Log ("Estabilizador aleatorio llamado");
-        Vector2 direccionPelota = this.movimientoPelota.GetComponent<Rigidbody2D> ().velocity.normalized;
-        Vector2 direccionSuperficie = colision.contacts [0].normal;
-        float anguloAleatorio = Random.Range (-100f, 100f);
-        Vector2 direccionRebote = Quaternion.Euler (0, 0, anguloAleatorio) * direccionPelota;
-        this.movimientoPelota.GetComponent<Rigidbody2D> ().velocity = direccionRebote * this.movimientoPelota.GetComponent<Rigidbody2D> ().velocity.magnitude;
-
+        Rebote (colision, Random.Range (-100f, 100f));
     }
+
+    void CambiarMaterialPelota ( Material material )
+    {
+        pelota = GetComponent<Renderer> ();
+        pelota.material = material;
+    }
+
     void VuelveTransparenteLaPelota ()
     {
-        pelota = GetComponent<Renderer> ();
-        pelota.material = Transparente;
-
+        CambiarMaterialPelota (Transparente);
     }
+
     void VuelvePelotaVisible ()
     {
-        pelota = GetComponent<Renderer> ();
-        pelota.material = rojo;
+        CambiarMaterialPelota (rojo);
     }
+
     private void OnCollisionEnter2D ( Collision2D colision )
     {
         if (colision.gameObject.name == "Raqueta")
@@ -89,15 +100,14 @@ public class ControlColision : MonoBehaviour
         {
             actualizartexto.SumaPuntos (100);
             pelotaHelada = false;
-            pelota.material = rojo;
+            CambiarMaterialPelota (rojo);
         }
 
         else if (colision.gameObject.name == "Cubo Azul")
         {
             actualizartexto.SumaPuntos (200);
             pelotaHelada = true;
-            pelota = GetComponent<Renderer> ();
-            pelota.material = azul;
+            CambiarMaterialPelota (azul);
             Debug.Log (pelotaHelada);
 
         }
