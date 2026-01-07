@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 
 namespace TMPro.Examples
@@ -14,10 +15,10 @@ namespace TMPro.Examples
         private float m_frame;
 
 
-        void Start ()
+        void Start()
         {
             // Add new TextMesh Pro Component
-            m_textMeshPro = gameObject.AddComponent<TextMeshPro> ();
+            m_textMeshPro = gameObject.AddComponent<TextMeshPro>();
 
             m_textMeshPro.autoSizeTextContainer = true;
 
@@ -41,15 +42,15 @@ namespace TMPro.Examples
             //m_textMeshPro.wordSpacing = 0.1f;
 
             //m_textMeshPro.enableCulling = true;
-            m_textMeshPro.enableWordWrapping = false;
+            m_textMeshPro.textWrappingMode = TextWrappingModes.NoWrap;
 
             //textMeshPro.fontColor = new Color32(255, 255, 255, 255);
         }
 
 
-        void Update ()
+        void Update()
         {
-            m_textMeshPro.SetText (label, m_frame % 1000);
+            m_textMeshPro.SetText(label, m_frame % 1000);
             m_frame += 1 * Time.deltaTime;
         }
 

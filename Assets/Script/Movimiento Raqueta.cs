@@ -23,7 +23,7 @@ public class MovimientoRaqueta : MonoBehaviour
     {
         float movimientoHorizontal = Input.GetAxisRaw ("Horizontal");
         float velocidad = raquetaCongelada ? VelocidadMovimientoLenta : VelocidadMovimiento;
-        rbRaqueta.velocity = new Vector2 (movimientoHorizontal * velocidad, 0);
+        rbRaqueta.linearVelocity = new Vector2 (movimientoHorizontal * velocidad, 0);
     }
 
     public void PosicionarRaqueta ()

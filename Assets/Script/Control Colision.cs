@@ -34,10 +34,10 @@ public class ControlColision : MonoBehaviour
 
     void Rebote ( Collision2D colision, float anguloAleatorio )
     {
-        Vector2 direccionPelota = rbPelota.velocity.normalized;
+        Vector2 direccionPelota = rbPelota.linearVelocity.normalized;
         Vector2 direccionSuperficie = colision.contacts [0].normal;
         Vector2 direccionRebote = Quaternion.Euler (0, 0, anguloAleatorio) * direccionPelota;
-        rbPelota.velocity = direccionRebote * rbPelota.velocity.magnitude;
+        rbPelota.linearVelocity = direccionRebote * rbPelota.linearVelocity.magnitude;
     }
 
     void RebotePared ( Collision2D colision )
@@ -90,7 +90,7 @@ public class ControlColision : MonoBehaviour
 
         else if (colision.gameObject.name == "Pared Inferior")
         {
-            this.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, 0);
+            this.GetComponent<Rigidbody2D> ().linearVelocity = new Vector2 (0, 0);
 
             actualizartexto.RestaVida ();
             StartCoroutine (this.movimientoPelota.SiguienteIntento (true));

@@ -45,7 +45,7 @@ public class MovimientoPelota : MonoBehaviour
     {
         direccion = direccion.normalized;
         float velocidad = this.velocidadMovimiento + this.contadorGolpe * velocidadExtra;
-        rbPelota.velocity = direccion * velocidad;
+        rbPelota.linearVelocity = direccion * velocidad;
     }
     public void PosicionarPelota ( bool comienzaJugador )
     {

@@ -1,9 +1,8 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class ChatController : MonoBehaviour
-{
+public class ChatController : MonoBehaviour {
 
 
     public TMP_InputField ChatInputField;
@@ -12,25 +11,25 @@ public class ChatController : MonoBehaviour
 
     public Scrollbar ChatScrollbar;
 
-    void OnEnable ()
+    void OnEnable()
     {
-        ChatInputField.onSubmit.AddListener (AddToChatOutput);
+        ChatInputField.onSubmit.AddListener(AddToChatOutput);
     }
 
-    void OnDisable ()
+    void OnDisable()
     {
-        ChatInputField.onSubmit.RemoveListener (AddToChatOutput);
+        ChatInputField.onSubmit.RemoveListener(AddToChatOutput);
     }
 
 
-    void AddToChatOutput ( string newText )
+    void AddToChatOutput(string newText)
     {
         // Clear Input Field
         ChatInputField.text = string.Empty;
 
         var timeNow = System.DateTime.Now;
 
-        string formattedInput = "[<#FFFF80>" + timeNow.Hour.ToString ("d2") + ":" + timeNow.Minute.ToString ("d2") + ":" + timeNow.Second.ToString ("d2") + "</color>] " + newText;
+        string formattedInput = "[<#FFFF80>" + timeNow.Hour.ToString("d2") + ":" + timeNow.Minute.ToString("d2") + ":" + timeNow.Second.ToString("d2") + "</color>] " + newText;
 
         if (ChatDisplayOutput != null)
         {
@@ -43,7 +42,7 @@ public class ChatController : MonoBehaviour
         }
 
         // Keep Chat input field active
-        ChatInputField.ActivateInputField ();
+        ChatInputField.ActivateInputField();
 
         // Set the scrollbar to the bottom when next text is submitted.
         ChatScrollbar.value = 0;

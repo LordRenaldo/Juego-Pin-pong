@@ -1,7 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System;
 
 
 namespace TMPro
@@ -34,7 +34,7 @@ namespace TMPro
             set { m_OnCharacterSelection = value; }
         }
         [SerializeField]
-        private CharacterSelectionEvent m_OnCharacterSelection = new CharacterSelectionEvent ();
+        private CharacterSelectionEvent m_OnCharacterSelection = new CharacterSelectionEvent();
 
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace TMPro
             set { m_OnSpriteSelection = value; }
         }
         [SerializeField]
-        private SpriteSelectionEvent m_OnSpriteSelection = new SpriteSelectionEvent ();
+        private SpriteSelectionEvent m_OnSpriteSelection = new SpriteSelectionEvent();
 
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace TMPro
             set { m_OnWordSelection = value; }
         }
         [SerializeField]
-        private WordSelectionEvent m_OnWordSelection = new WordSelectionEvent ();
+        private WordSelectionEvent m_OnWordSelection = new WordSelectionEvent();
 
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace TMPro
             set { m_OnLineSelection = value; }
         }
         [SerializeField]
-        private LineSelectionEvent m_OnLineSelection = new LineSelectionEvent ();
+        private LineSelectionEvent m_OnLineSelection = new LineSelectionEvent();
 
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace TMPro
             set { m_OnLinkSelection = value; }
         }
         [SerializeField]
-        private LinkSelectionEvent m_OnLinkSelection = new LinkSelectionEvent ();
+        private LinkSelectionEvent m_OnLinkSelection = new LinkSelectionEvent();
 
 
 
@@ -96,15 +96,15 @@ namespace TMPro
         private int m_lastWordIndex = -1;
         private int m_lastLineIndex = -1;
 
-        void Awake ()
+        void Awake()
         {
             // Get a reference to the text component.
-            m_TextComponent = gameObject.GetComponent<TMP_Text> ();
+            m_TextComponent = gameObject.GetComponent<TMP_Text>();
 
             // Get a reference to the camera rendering the text taking into consideration the text component type.
-            if (m_TextComponent.GetType () == typeof (TextMeshProUGUI))
+            if (m_TextComponent.GetType() == typeof(TextMeshProUGUI))
             {
-                m_Canvas = gameObject.GetComponentInParent<Canvas> ();
+                m_Canvas = gameObject.GetComponentInParent<Canvas>();
                 if (m_Canvas != null)
                 {
                     if (m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay)
@@ -120,69 +120,78 @@ namespace TMPro
         }
 
 
-        void LateUpdate ()
+        void LateUpdate()
         {
-            if (TMP_TextUtilities.IsIntersectingRectTransform (m_TextComponent.rectTransform, Input.mousePosition, m_Camera))
+            if (TMP_TextUtilities.IsIntersectingRectTransform(m_TextComponent.rectTransform, Input.mousePosition, m_Camera))
             {
+                #region Nearest Character
+                /*int charIndex = TMP_TextUtilities.FindNearestCharacterOnLine(m_TextComponent, Input.mousePosition, 0, m_Camera, false);
+                if (charIndex != -1 && charIndex != m_lastCharIndex)
+                {
+                    m_lastCharIndex = charIndex;
+                }*/
+                #endregion
+
+
                 #region Example of Character or Sprite Selection
-                int charIndex = TMP_TextUtilities.FindIntersectingCharacter (m_TextComponent, Input.mousePosition, m_Camera, true);
+                int charIndex = TMP_TextUtilities.FindIntersectingCharacter(m_TextComponent, Input.mousePosition, m_Camera, true);
                 if (charIndex != -1 && charIndex != m_lastCharIndex)
                 {
                     m_lastCharIndex = charIndex;
 
-                    TMP_TextElementType elementType = m_TextComponent.textInfo.characterInfo [charIndex].elementType;
+                    TMP_TextElementType elementType = m_TextComponent.textInfo.characterInfo[charIndex].elementType;
 
                     // Send event to any event listeners depending on whether it is a character or sprite.
                     if (elementType == TMP_TextElementType.Character)
-                        SendOnCharacterSelection (m_TextComponent.textInfo.characterInfo [charIndex].character, charIndex);
+                        SendOnCharacterSelection(m_TextComponent.textInfo.characterInfo[charIndex].character, charIndex);
                     else if (elementType == TMP_TextElementType.Sprite)
-                        SendOnSpriteSelection (m_TextComponent.textInfo.characterInfo [charIndex].character, charIndex);
+                        SendOnSpriteSelection(m_TextComponent.textInfo.characterInfo[charIndex].character, charIndex);
                 }
                 #endregion
 
 
                 #region Example of Word Selection
                 // Check if Mouse intersects any words and if so assign a random color to that word.
-                int wordIndex = TMP_TextUtilities.FindIntersectingWord (m_TextComponent, Input.mousePosition, m_Camera);
+                int wordIndex = TMP_TextUtilities.FindIntersectingWord(m_TextComponent, Input.mousePosition, m_Camera);
                 if (wordIndex != -1 && wordIndex != m_lastWordIndex)
                 {
                     m_lastWordIndex = wordIndex;
 
                     // Get the information about the selected word.
-                    TMP_WordInfo wInfo = m_TextComponent.textInfo.wordInfo [wordIndex];
+                    TMP_WordInfo wInfo = m_TextComponent.textInfo.wordInfo[wordIndex];
 
                     // Send the event to any listeners.
-                    SendOnWordSelection (wInfo.GetWord (), wInfo.firstCharacterIndex, wInfo.characterCount);
+                    SendOnWordSelection(wInfo.GetWord(), wInfo.firstCharacterIndex, wInfo.characterCount);
                 }
                 #endregion
 
 
                 #region Example of Line Selection
                 // Check if Mouse intersects any words and if so assign a random color to that word.
-                int lineIndex = TMP_TextUtilities.FindIntersectingLine (m_TextComponent, Input.mousePosition, m_Camera);
+                int lineIndex = TMP_TextUtilities.FindIntersectingLine(m_TextComponent, Input.mousePosition, m_Camera);
                 if (lineIndex != -1 && lineIndex != m_lastLineIndex)
                 {
                     m_lastLineIndex = lineIndex;
 
                     // Get the information about the selected word.
-                    TMP_LineInfo lineInfo = m_TextComponent.textInfo.lineInfo [lineIndex];
+                    TMP_LineInfo lineInfo = m_TextComponent.textInfo.lineInfo[lineIndex];
 
                     // Send the event to any listeners.
-                    char [] buffer = new char [lineInfo.characterCount];
+                    char[] buffer = new char[lineInfo.characterCount];
                     for (int i = 0; i < lineInfo.characterCount && i < m_TextComponent.textInfo.characterInfo.Length; i++)
                     {
-                        buffer [i] = m_TextComponent.textInfo.characterInfo [i + lineInfo.firstCharacterIndex].character;
+                        buffer[i] = m_TextComponent.textInfo.characterInfo[i + lineInfo.firstCharacterIndex].character;
                     }
 
-                    string lineText = new string (buffer);
-                    SendOnLineSelection (lineText, lineInfo.firstCharacterIndex, lineInfo.characterCount);
+                    string lineText = new string(buffer);
+                    SendOnLineSelection(lineText, lineInfo.firstCharacterIndex, lineInfo.characterCount);
                 }
                 #endregion
 
 
                 #region Example of Link Handling
                 // Check if mouse intersects with any links.
-                int linkIndex = TMP_TextUtilities.FindIntersectingLink (m_TextComponent, Input.mousePosition, m_Camera);
+                int linkIndex = TMP_TextUtilities.FindIntersectingLink(m_TextComponent, Input.mousePosition, m_Camera);
 
                 // Handle new Link selection.
                 if (linkIndex != -1 && linkIndex != m_selectedLink)
@@ -190,10 +199,10 @@ namespace TMPro
                     m_selectedLink = linkIndex;
 
                     // Get information about the link.
-                    TMP_LinkInfo linkInfo = m_TextComponent.textInfo.linkInfo [linkIndex];
+                    TMP_LinkInfo linkInfo = m_TextComponent.textInfo.linkInfo[linkIndex];
 
                     // Send the event to any listeners.
-                    SendOnLinkSelection (linkInfo.GetLinkID (), linkInfo.GetLinkText (), linkIndex);
+                    SendOnLinkSelection(linkInfo.GetLinkID(), linkInfo.GetLinkText(), linkIndex);
                 }
                 #endregion
             }
@@ -208,46 +217,46 @@ namespace TMPro
         }
 
 
-        public void OnPointerEnter ( PointerEventData eventData )
+        public void OnPointerEnter(PointerEventData eventData)
         {
             //Debug.Log("OnPointerEnter()");
         }
 
 
-        public void OnPointerExit ( PointerEventData eventData )
+        public void OnPointerExit(PointerEventData eventData)
         {
             //Debug.Log("OnPointerExit()");
         }
 
 
-        private void SendOnCharacterSelection ( char character, int characterIndex )
+        private void SendOnCharacterSelection(char character, int characterIndex)
         {
             if (onCharacterSelection != null)
-                onCharacterSelection.Invoke (character, characterIndex);
+                onCharacterSelection.Invoke(character, characterIndex);
         }
 
-        private void SendOnSpriteSelection ( char character, int characterIndex )
+        private void SendOnSpriteSelection(char character, int characterIndex)
         {
             if (onSpriteSelection != null)
-                onSpriteSelection.Invoke (character, characterIndex);
+                onSpriteSelection.Invoke(character, characterIndex);
         }
 
-        private void SendOnWordSelection ( string word, int charIndex, int length )
+        private void SendOnWordSelection(string word, int charIndex, int length)
         {
             if (onWordSelection != null)
-                onWordSelection.Invoke (word, charIndex, length);
+                onWordSelection.Invoke(word, charIndex, length);
         }
 
-        private void SendOnLineSelection ( string line, int charIndex, int length )
+        private void SendOnLineSelection(string line, int charIndex, int length)
         {
             if (onLineSelection != null)
-                onLineSelection.Invoke (line, charIndex, length);
+                onLineSelection.Invoke(line, charIndex, length);
         }
 
-        private void SendOnLinkSelection ( string linkID, string linkText, int linkIndex )
+        private void SendOnLinkSelection(string linkID, string linkText, int linkIndex)
         {
             if (onLinkSelection != null)
-                onLinkSelection.Invoke (linkID, linkText, linkIndex);
+                onLinkSelection.Invoke(linkID, linkText, linkIndex);
         }
 
     }

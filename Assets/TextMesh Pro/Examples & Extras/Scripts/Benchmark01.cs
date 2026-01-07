@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 
 namespace TMPro.Examples
@@ -28,14 +28,14 @@ namespace TMPro.Examples
 
 
 
-        IEnumerator Start ()
+        IEnumerator Start()
         {
 
 
 
             if (BenchmarkType == 0) // TextMesh Pro Component
             {
-                m_textMeshPro = gameObject.AddComponent<TextMeshPro> ();
+                m_textMeshPro = gameObject.AddComponent<TextMeshPro>();
                 m_textMeshPro.autoSizeTextContainer = true;
 
                 //m_textMeshPro.anchorDampening = true;
@@ -54,29 +54,29 @@ namespace TMPro.Examples
                 //m_textMeshPro.fontSharedMaterial.SetFloat("_OutlineWidth", 0.2f);
                 //m_textMeshPro.fontSharedMaterial.EnableKeyword("UNDERLAY_ON");
                 //m_textMeshPro.lineJustification = LineJustificationTypes.Center;
-                m_textMeshPro.enableWordWrapping = false;
-                //m_textMeshPro.lineLength = 60;          
+                m_textMeshPro.textWrappingMode = TextWrappingModes.NoWrap;
+                //m_textMeshPro.lineLength = 60;
                 //m_textMeshPro.characterSpacing = 0.2f;
                 //m_textMeshPro.fontColor = new Color32(255, 255, 255, 255);
 
                 m_material01 = m_textMeshPro.font.material;
-                m_material02 = Resources.Load<Material> ("Fonts & Materials/LiberationSans SDF - Drop Shadow"); // Make sure the LiberationSans SDF exists before calling this...  
+                m_material02 = Resources.Load<Material>("Fonts & Materials/LiberationSans SDF - Drop Shadow"); // Make sure the LiberationSans SDF exists before calling this...
 
 
             }
             else if (BenchmarkType == 1) // TextMesh
             {
-                m_textMesh = gameObject.AddComponent<TextMesh> ();
+                m_textMesh = gameObject.AddComponent<TextMesh>();
 
                 if (TextMeshFont != null)
                 {
                     m_textMesh.font = TextMeshFont;
-                    m_textMesh.GetComponent<Renderer> ().sharedMaterial = m_textMesh.font.material;
+                    m_textMesh.GetComponent<Renderer>().sharedMaterial = m_textMesh.font.material;
                 }
                 else
                 {
-                    m_textMesh.font = Resources.Load ("Fonts/ARIAL", typeof (Font)) as Font;
-                    m_textMesh.GetComponent<Renderer> ().sharedMaterial = m_textMesh.font.material;
+                    m_textMesh.font = Resources.Load("Fonts/ARIAL", typeof(Font)) as Font;
+                    m_textMesh.GetComponent<Renderer>().sharedMaterial = m_textMesh.font.material;
                 }
 
                 m_textMesh.fontSize = 48;
@@ -91,7 +91,7 @@ namespace TMPro.Examples
             {
                 if (BenchmarkType == 0)
                 {
-                    m_textMeshPro.SetText (label01, i % 1000);
+                    m_textMeshPro.SetText(label01, i % 1000);
                     if (i % 1000 == 999)
                         m_textMeshPro.fontSharedMaterial = m_textMeshPro.fontSharedMaterial == m_material01 ? m_textMeshPro.fontSharedMaterial = m_material02 : m_textMeshPro.fontSharedMaterial = m_material01;
 
@@ -99,7 +99,7 @@ namespace TMPro.Examples
 
                 }
                 else if (BenchmarkType == 1)
-                    m_textMesh.text = label02 + (i % 1000).ToString ();
+                    m_textMesh.text = label02 + (i % 1000).ToString();
 
                 yield return null;
             }

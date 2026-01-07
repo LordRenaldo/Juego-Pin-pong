@@ -14,11 +14,11 @@ public class Cubos : MonoBehaviour
     void ReboteCubo ( Collision2D colision )
     {
         Debug.Log ("Rebote con cubo llamado");
-        Vector2 direccionPelota = rbPelota.velocity.normalized;
+        Vector2 direccionPelota = rbPelota.linearVelocity.normalized;
         Vector2 direccionSuperficie = colision.contacts [0].normal;
         float anguloAleatorio = Random.Range (-10f, 10f);
         Vector2 direccionRebote = Quaternion.Euler (0, 0, anguloAleatorio) * direccionPelota;
-        rbPelota.velocity = direccionRebote * rbPelota.velocity.magnitude;
+        rbPelota.linearVelocity = direccionRebote * rbPelota.linearVelocity.magnitude;
     }
 
     private void OnCollisionEnter2D ( Collision2D colLision )
